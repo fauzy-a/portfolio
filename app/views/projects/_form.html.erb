@@ -1,0 +1,68 @@
+<% if project.images.attached? %>
+  <div class="mb-4 p-3 bg-light rounded-3 border">
+    <label class="form-label fw-semibold d-block mb-3 text-secondary">Gallery Screenshot Saat Ini</label>
+    <div class="row g-2">
+      <% project.images.each do |image| %>
+        <div class="col-4 col-md-2 position-relative">
+          <div class="card h-100 shadow-sm border-0">
+            <%= image_tag image, class: "card-img rounded", style: "height: 100px; object-fit: cover;" %>
+            
+            <div class="position-absolute top-0 end-0 m-1">
+              <%= button_to delete_image_project_path(project.id, image_id: image.id), 
+                  method: :delete, 
+                  data: { turbo_confirm: "Hapus gambar ini?" },
+                  class: "btn btn-danger btn-sm rounded-circle p-0 shadow", 
+                  style: "width: 24px; height: 24px; line-height: 1; display: flex; align-items: center; justify-content: center;" do %>
+                <i class="fas fa-times" style="font-size: 11px;"></i>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="form-text mt-2">Klik tanda silang untuk menghapus gambar secara permanen.</div>
+  </div>
+<% end %>
+
+<hr class="my-4">
+
+<%= form_with(model: project, class: "needs-validation") do |form| %>
+  <% if project.errors.any? %>
+    <div class="alert alert-danger shadow-sm border-0">
+      <h6 class="fw-bold"><%= pluralize(project.errors.count, "error") %> menghalangi project ini disimpan:</h6>
+      <ul class="mb-0 small">
+        <% project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :title, "Judul Project", class: "form-label fw-semibold text-secondary" %>
+    <%= form.text_field :title, class: "form-control form-control-lg", placeholder: "Contoh: E-Commerce App" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, "Deskripsi Lengkap", class: "form-label fw-semibold text-secondary" %>
+    <%= form.text_area :description, rows: 5, class: "form-control", placeholder: "Ceritakan tentang teknologi dan fitur project ini..." %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :github_url, "URL GitHub Repository", class: "form-label fw-semibold text-secondary" %>
+    <div class="input-group">
+      <span class="input-group-text bg-light border-end-0"><i class="fab fa-github"></i></span>
+      <%= form.text_field :github_url, class: "form-control border-start-0", placeholder: "https://github.com/user/repo" %>
+    </div>
+  </div>
+
+  <div class="mb-4 p-3 bg-white rounded-3 border border-dashed text-center">
+    <%= form.label :images, "Tambah Screenshot Baru", class: "form-label d-block fw-semibold mb-3" %>
+    <%= form.file_field :images, multiple: true, class: "form-control" %>
+    <div class="form-text mt-2 text-muted small">Pilih file baru untuk menambahkan ke gallery yang sudah ada.</div>
+  </div>
+
+  <div class="mt-4 pt-3 border-top">
+    <%= form.submit "Simpan Perubahan Project", class: "btn btn-primary w-100 btn-lg shadow-sm" %>
+  </div>
+<% end %>

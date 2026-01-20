@@ -1,0 +1,184 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <h2 class="fw-bold mb-4 text-center"><i class="fas fa-user-cog me-2"></i>Pengaturan Admin</h2>
+      
+      <div class="row">
+        <div class="col-md-6 mb-4">
+  <div class="card shadow-sm border-0 h-100">
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-3">Update CV (PDF)</h5>
+      
+      <% if @user.cv_file.attached? %>
+        <div class="mb-3">
+          <label class="form-label text-muted small">File Aktif:</label>
+          <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded border">
+            <div class="d-flex align-items-center overflow-hidden">
+              <i class="fas fa-file-pdf text-danger me-2"></i>
+              <span class="small text-truncate"><%= @user.cv_file.filename %></span>
+            </div>
+            
+            <%= button_to delete_cv_path, 
+                method: :delete, 
+                form: { data: { turbo_confirm: "Apakah Anda yakin ingin menghapus CV ini dan mereset statistik?" } }, 
+                class: "btn btn-link text-danger p-0 ms-2" do %>
+                <i class="fas fa-trash-alt"></i>
+                <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_with(model: @user, url: update_cv_path, method: :patch) do |f| %>
+        <div class="mb-3">
+          <%= f.file_field :cv_file, class: "form-control form-control-sm", accept: 'application/pdf', required: true %>
+        </div>
+        <%= f.submit @user.cv_file.attached? ? "Ganti CV" : "Upload CV", class: "btn btn-primary w-100" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-6 mb-4">
+  <div class="card shadow-sm border-0 h-100">
+    <div class="card-body p-4 text-center">
+      <h5 class="fw-bold mb-3 text-start">Foto Profil</h5>
+      
+      <div class="mb-3 position-relative d-inline-block">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar, class: "rounded-circle shadow-sm", style: "width: 120px; height: 120px; object-fit: cover;" %>
+          <%= button_to delete_avatar_path, method: :delete, form: { data: { turbo_confirm: "Hapus foto profil?" } }, class: "btn btn-danger btn-sm position-absolute bottom-0 end-0 rounded-circle" do %>
+            <i class="fas fa-times"></i>
+          <% end %>
+        <% else %>
+          <i class="fas fa-user-circle fa-7x text-light"></i>
+        <% end %>
+      </div>
+
+      <%= form_with(model: @user, url: update_avatar_path, method: :patch) do |f| %>
+        <%= f.file_field :avatar, class: "form-control form-control-sm mb-2", accept: 'image/*' %>
+        <%= f.submit "Upload Foto", class: "btn btn-outline-primary btn-sm w-100" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3">Keamanan Akun</h5>
+              
+              <%= form_with(model: @user, url: update_password_path, method: :patch) do |f| %>
+                <% if @user.errors.any? %>
+                  <div class="alert alert-danger p-2 small">
+                    <% @user.errors.full_messages.each do |msg| %>
+                      <div><%= msg %></div>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <div class="mb-3">
+                  <%= f.label :current_password, "Password Saat Ini", class: "form-label small fw-bold" %>
+                  <%= f.password_field :current_password, class: "form-control form-control-sm", required: true %>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                  <%= f.label :password, "Password Baru", class: "form-label small fw-bold" %>
+                  <%= f.password_field :password, class: "form-control form-control-sm", required: true %>
+                </div>
+
+                <div class="mb-3">
+                  <%= f.label :password_confirmation, "Konfirmasi Password Baru", class: "form-label small fw-bold" %>
+                  <%= f.password_field :password_confirmation, class: "form-control form-control-sm", required: true %>
+                </div>
+
+                <%= f.submit "Update Password", class: "btn btn-dark w-100" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body p-4">
+        <h5 class="fw-bold mb-3"><i class="fas fa-address-book me-2"></i>Informasi Kontak & Sosmed</h5>
+        
+        <%= form_with(model: @user, url: update_contacts_path, method: :patch) do |f| %>
+          <div class="row">
+            <div class="mb-3">
+              <%= f.label :whatsapp, "Nomor WhatsApp (Gunakan kode negara, misal: 62812xxx)", class: "form-label small fw-bold" %>
+              <div class="input-group">
+                <span class="input-group-text bg-success text-white"><i class="fab fa-whatsapp"></i></span>
+                <%= f.text_field :whatsapp, class: "form-control", placeholder: "628xxx" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :linkedin, "Link LinkedIn", class: "form-label small fw-bold" %>
+              <div class="input-group">
+                <span class="input-group-text bg-primary text-white"><i class="fab fa-linkedin-in"></i></span>
+                <%= f.url_field :linkedin, class: "form-control", placeholder: "https://linkedin.com/in/..." %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :github_url_admin, "Link GitHub", class: "form-label small fw-bold" %>
+              <div class="input-group">
+                <span class="input-group-text bg-dark text-white"><i class="fab fa-github"></i></span>
+                <%= f.url_field :github_url_admin, class: "form-control", placeholder: "https://github.com/..." %>
+              </div>
+            </div>
+          </div>
+            <%= f.submit "Update Semua Kontak", class: "btn btn-dark w-100" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<hr class="mb-5">
+
+<div class="row mb-5">
+  <div class="col-12">
+    <h4 class="fw-bold mb-3 text-center"><i class="fas fa-chart-line me-2"></i>Statistik Pengunjung</h4>
+  </div>
+  
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-primary text-white">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-file-pdf fa-2x mb-2"></i>
+        <h2 class="fw-bold mb-0"><%= @user.cv_clicks_count %></h2>
+        <p class="mb-0 small opacity-75">CV Telah Diunduh</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-dark text-white">
+      <div class="card-body text-center py-4">
+        <i class="fas fa-eye fa-2x mb-2"></i>
+        <h2 class="fw-bold mb-0"><%= Project.sum(:clicks_count) %></h2>
+        <p class="mb-0 small opacity-75">Total Project Dilihat</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm bg-white">
+      <div class="card-body py-4">
+        <h6 class="text-muted small fw-bold text-uppercase">Project Terpopuler:</h6>
+        <% popular = Project.order(clicks_count: :desc).first %>
+        <% if popular %>
+          <div class="fw-bold text-primary text-truncate"><%= popular.title %></div>
+          <div class="small text-muted"><%= popular.clicks_count %> Klik</div>
+        <% else %>
+          <div class="text-muted small">Belum ada data</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

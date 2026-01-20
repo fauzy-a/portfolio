@@ -1,0 +1,114 @@
+<header class="bg-white py-5 mb-5 border-bottom">
+  <div class="container text-center py-5">
+    <h1 class="display-3 fw-bold text-dark">Hello, I'm <span class="text-primary">Fauzy.</span></h1>
+    <p class="lead text-muted mx-auto" style="max-width: 600px;">
+      A Bachelor's degree graduate in Informatics with a growing interest in software development and IT systems.
+      <div class="mt-4">
+<% admin = User.first %>
+  <% if admin&.cv_file&.attached? %>
+    <%= link_to track_cv_path , class: "btn btn-outline-primary", target: "_blank" do %>
+      <i class="fas fa-download me-1"></i> Download CV
+    <% end %>
+  <% end %>    
+  </div>
+  </div>
+</header>
+
+<div class="container mb-5" id="projects">
+  <div class="d-flex justify-content-between align-items-end mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">Featured Projects</h2>
+      <p class="text-muted">Koleksi project saya</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <% @projects.each do |project| %>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm overflow-hidden">
+          <% if project.images.attached? %>
+          <%= link_to project_path(project) do %>
+           <%= image_tag project.images.first, class: "card-img-top", style: "height: 220px; object-fit: cover;" %>
+          <% end %>
+        <% else %>
+        <%= link_to project_path(project) do %>
+           <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">
+             No Image
+           </div>
+           <% end %>
+        <% end %>
+          
+          <div class="card-body p-4">
+            <h5 class="card-title fw-bold"><%= project.title %></h5>
+            <p class="card-text text-muted mb-4 small"><%= truncate(project.description, length: 100) %></p>
+        
+            <% if user_signed_in? %>
+              <hr>
+              <div class="d-flex justify-content-between">
+                <%= link_to "Edit", edit_project_path(project), class: "btn btn-sm btn-outline-warning" %>
+                <%= button_to "Delete", project, method: :delete, 
+                  form: { data: { turbo_confirm: "Apakah Anda yakin ingin menghapus project '#{project.title}'? Tindakan ini tidak dapat dibatalkan." } }, 
+                  class: "btn btn-sm btn-outline-danger" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<section id="about" class="py-5 bg-white border-top">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center">
+<div class="col-md-6 text-center">
+  <% admin = User.first %>
+  <% if admin&.avatar&.attached? %>
+    <%= image_tag admin.avatar, 
+        class: "img-fluid rounded-circle shadow-lg border border-5 border-white", 
+        style: "width: 300px; height: 300px; object-fit: cover;" %>
+  <% else %>
+    <i class="fas fa-user-circle fa-10x text-primary opacity-25"></i>
+  <% end %>
+</div>      </div>
+      <div class="col-md-6 mb-4 mb-md-0">
+        <h2 class="display-5 fw-bold mb-4">About me</h2>
+        <p class="lead text-muted">I am currently enhancing my skills in Ruby on Rails, MVC architecture, and Odoo ERP fundamentals through self-learning and hands-on practice. I am eager to contribute as a Junior Developer and grow in a collaborative environment.</p>
+        <p class="text-muted">Selain coding, saya juga senang berkontribusi di komunitas open source dan membagikan pengalaman belajar saya melalui project-project di GitHub.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="py-5 bg-light border-top">
+  <div class="container py-5 text-center">
+    <h2 class="display-5 fw-bold mb-3">Mari Bekerjasama</h2>
+    <p class="lead text-muted mb-5">Tertarik untuk berkolaborasi atau memiliki pertanyaan? Hubungi saya melalui media sosial di bawah ini.</p>
+    
+<% admin = User.first %>
+<div class="d-flex gap-3 justify-content-center mt-4">
+  <a href="mailto:<%= admin.email %>" class="btn btn-outline-dark rounded-circle p-3">
+    <i class="fas fa-envelope fa-lg"></i>
+  </a>
+
+  <% if admin.whatsapp.present? %>
+    <a href="https://wa.me/<%= admin.whatsapp %>" target="_blank" class="btn btn-outline-success rounded-circle p-3">
+      <i class="fab fa-whatsapp fa-lg"></i>
+    </a>
+  <% end %>
+
+  <% if admin.linkedin.present? %>
+    <a href="<%= admin.linkedin %>" target="_blank" class="btn btn-outline-primary rounded-circle p-3">
+      <i class="fab fa-linkedin-in fa-lg"></i>
+    </a>
+  <% end %>
+
+  <% if admin.github_url_admin.present? %>
+    <a href="<%= admin.github_url_admin %>" target="_blank" class="btn btn-outline-dark rounded-circle p-3">
+      <i class="fab fa-github fa-lg"></i>
+    </a>
+  <% end %>
+</div>
+  </div>
+</section>

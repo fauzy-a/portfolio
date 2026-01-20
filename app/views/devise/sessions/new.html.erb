@@ -1,0 +1,53 @@
+<div class="bg-login">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        
+        <div class="text-center mb-4">
+          <h2 class="fw-bold text-black text-uppercase" style="letter-spacing: 2px;">Login Admin</h2>
+          <p class="text-black-50">Silakan login untuk mengelola portofolio</p>
+        </div>
+
+        <div class="card p-4 card-glass">
+          <div class="card-body">
+            <% if flash[:alert] %>
+              <div class="alert alert-danger border-0 small py-2 mb-4 shadow-sm" style="background: rgba(255,0,0,0.2); color: white;">
+              <i class="fas fa-exclamation-circle me-2"></i> <%= flash[:alert] %>
+              </div>
+              <% end %>
+
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              
+              <div class="form-floating form-floating-custom mb-3">
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "name@example.com" %>
+                <%= f.label :email, "Email Address" %>
+              </div>
+
+              <div class="form-floating form-floating-custom mb-4">
+                <%= f.password_field :password, autocomplete: "current-password", class: "form-control", placeholder: "Password" %>
+                <%= f.label :password, "Password" %>
+              </div>
+
+              <% if devise_mapping.rememberable? %>
+                <div class="form-check mb-4">
+                  <%= f.check_box :remember_me, class: "form-check-input border-black" %>
+                  <%= f.label :remember_me, "Ingat Saya", class: "form-check-label text-black-50" %>
+                </div>
+              <% end %>
+
+              <div class="d-grid">
+                <%= f.submit "Masuk Sekarang", class: "btn btn-light btn-lg fw-bold text-primary shadow-sm" %>
+              </div>
+
+            <% end %>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <%= link_to "Kembali ke Beranda", root_path, class: "text-black-50 text-decoration-none small" %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

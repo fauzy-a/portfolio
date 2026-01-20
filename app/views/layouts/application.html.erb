@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fauzy's Portfolio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <style>
+      body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+      .navbar { backdrop-filter: blur(10px); background-color: rgba(33, 37, 41, 0.9) !important; }
+      .card { border: none; transition: transform 0.3s ease; }
+      .card:hover { transform: translateY(-10px); }
+      .btn-primary { border-radius: 8px; padding: 10px 20px; }
+      html { scroll-behavior: smooth; }
+      .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+      }
+      .border-dashed {
+        border-style: dashed !important;
+        border-width: 2px !important;
+        border-color: #dee2e6 !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container">
+        <%= link_to "PORTFOLIO", root_path, class: "navbar-brand fw-bold shadow-sm" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
+            <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/#contact">Contact</a></li>
+            <% if user_signed_in? %>
+              <li class="nav-item"><%= link_to "Add Project", new_project_path, class: "nav-link text-warning" %></li>
+              <li class="nav-item"><%= link_to "Settings", admin_settings_path, class: "nav-link text-primary" %></li>
+              <li class="nav-item">
+                <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-outline-danger ms-lg-3" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <%= yield %>
+
+    <footer class="py-5 bg-dark text-white mt-5">
+      <div class="container text-center">
+        <p class="mb-0">© 2026 Fauzy Portfolio. Built with Ruby on Rails & Bootstrap.</p>
+      </div>
+    </footer>
+  <script>
+  window.addEventListener('turbo:load', () => {
+    document.addEventListener('submit', (e) => {
+      if (e.target && e.target.getAttribute('data-turbo-confirm')) {
+        e.preventDefault();
+        
+        const message = e.target.getAttribute('data-turbo-confirm');
+        
+        Swal.fire({
+          title: 'Apakah anda yakin?',
+          text: message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Ya, Hapus!',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            e.target.removeAttribute('data-turbo-confirm');
+            e.target.submit();
+          }
+        });
+      }
+    });
+  });
+</script>
+
+<div id="flash-data" 
+         data-notice="<%= notice %>" 
+         data-alert="<%= alert %>">
+    </div>
+
+    <script>
+      // Fungsi untuk menampilkan Toast
+      const showToast = (icon, title) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        });
+
+        Toast.fire({
+          icon: icon,
+          title: title
+        });
+      };
+
+      // Event Listener: Jalan setiap kali Turbo memuat halaman baru
+      document.addEventListener('turbo:load', () => {
+        const flashData = document.getElementById('flash-data');
+        
+        if (flashData) {
+          const notice = flashData.dataset.notice;
+          const alert = flashData.dataset.alert;
+
+          if (notice && notice.length > 0) {
+            showToast('success', notice);
+            // Bersihkan agar tidak muncul lagi saat tombol back ditekan
+            flashData.dataset.notice = ""; 
+          }
+
+          if (alert && alert.length > 0) {
+            showToast('error', alert);
+            flashData.dataset.alert = "";
+          }
+        }
+      });
+    </script>
+
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+<script>
+  // Inisialisasi GLightbox agar otomatis jalan
+  document.addEventListener('turbo:load', () => {
+    const lightbox = GLightbox({
+      selector: '.glightbox', // Class yang akan kita pakai di gambar
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true
+    });
+  });
+</script>
+
+  </body>
+</html>
