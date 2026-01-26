@@ -34,6 +34,23 @@ A professional, full-stack portfolio website built with **Ruby on Rails 7**. Thi
 
 ---
 
+## Screenshots
+
+* **Login** 
+![login](docs/screenshots/login.png)
+* **Front Page** 
+![views](docs/screenshots/views.png)
+* **Show Project** 
+![show](docs/screenshots/show-project.png)
+* **Add Project** 
+![add](docs/screenshots/add-project.png)
+* **About dan Contact**
+![aboutcontact](docs/screenshots/aboutcontact.png)
+* **Setting Page**
+![setting](docs/screenshots/setting.png)
+
+---
+
 ## 🚀 Getting Started (Local Development)
 
 This project includes an automated setup script to ensure all assets and databases are configured correctly.
